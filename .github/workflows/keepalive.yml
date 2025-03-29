@@ -13,5 +13,5 @@ jobs:
       - name: Ping Supabase
         run: |
           curl -s -X GET \
-          "https://${{ vars.APP_URL }}/api/keepalive" \
-          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
+          curl -X GET "${{ Secrets.APP_URL }}/api/keepalive" \
+          -H "Authorization: Bearer ${{ Secrets.CRON_SECRET }}"
