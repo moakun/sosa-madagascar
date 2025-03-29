@@ -15,3 +15,5 @@ jobs:
           curl -s -X GET \
           curl -X GET "${{ Secrets.APP_URL }}/api/keepalive" \
           -H "Authorization: Bearer ${{ Secrets.CRON_SECRET }}"
+    permissions:
+      contents: read  # Read access to the repository contents
