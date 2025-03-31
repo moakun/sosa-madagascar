@@ -58,7 +58,7 @@ export default function Register() {
       const result = await response.json();
 
       if (response.ok) {
-        router.push("/login/congo"); // Updated to Congo login
+        router.push("/login"); // Updated to Congo login
       } else {
         setServerError(result.error || "An unexpected error occurred");
       }
