@@ -1,36 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["multiSchema"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
-  schemas  = ["congo", "senegal", "uganda", "public"]
 }
 
-// Shared tables must explicitly declare their schema
-model GlobalSettings {
-  id    Int    @id @default(autoincrement())
-  key   String @unique
-  value String
+model User {
+  id              Int      @id @default(autoincrement()) @unique
+  fullName        String   @db.VarChar(100) 
+  email           String   @db.VarChar(100) @unique
+  companyName     String   @db.VarChar(255) @unique
+  password        String   @db.VarChar(255)
+  video1          Boolean  @default(false)
+  video2          Boolean  @default(false)
+  score           Float?   // Assuming score is optional
+  gotAttestation  Boolean  @default(false)
+  date            DateTime @default(now()) // Default current timestamp
   
-  @@schema("public")  // Explicitly placed in public schema
-}
-
-// Congo Project
-model CongoUser {
-  id              Int      @id @default(autoincrement())
-  fullName        String   @db.VarChar(100)
-  email           String   @unique @db.VarChar(100)
-  companyName     String   @db.VarChar(255) @unique
-  password        String   @db.VarChar(255)
-  video1          Boolean  @default(false)
-  video2          Boolean  @default(false)
-  score           Float?
-  gotAttestation  Boolean  @default(false)
-  date            DateTime @default(now())
+  // Fields from Info
   dispositif      String?  @db.VarChar(255)
   engagement      String?  @db.VarChar(255)
   identification  String?  @db.VarChar(255)
@@ -40,63 +36,4 @@ model CongoUser {
   certifierISO    String?  @db.VarChar(255)
   mepSystem       String?  @db.VarChar(255)
   intention       String?  @db.VarChar(255)
-  attestationDate DateTime? @map("attestation_date") // Track when attestation was granted
-
-
-  @@schema("congo")
-  @@map("user")
-}
-
-// Senegal Project
-model SenegalUser {
-  id              Int      @id @default(autoincrement())
-  fullName        String   @db.VarChar(100)
-  email           String   @unique @db.VarChar(100)
-  companyName     String   @db.VarChar(255) @unique
-  password        String   @db.VarChar(255)
-  video1          Boolean  @default(false)
-  video2          Boolean  @default(false)
-  score           Float?
-  gotAttestation  Boolean  @default(false)
-  date            DateTime @default(now())
-  dispositif      String?  @db.VarChar(255)
-  engagement      String?  @db.VarChar(255)
-  identification  String?  @db.VarChar(255)
-  formation       String?  @db.VarChar(255)
-  procedure       String?  @db.VarChar(255)
-  dispositifAlert String?  @db.VarChar(255)
-  certifierISO    String?  @db.VarChar(255)
-  mepSystem       String?  @db.VarChar(255)
-  intention       String?  @db.VarChar(255)
-  attestationDate DateTime? @map("attestation_date") // Track when attestation was granted
-
-  @@schema("senegal")
-  @@map("user")
-}
-
-// Uganda Project
-model UgandaUser {
-  id              Int      @id @default(autoincrement())
-  fullName        String   @db.VarChar(100)
-  email           String   @unique @db.VarChar(100)
-  companyName     String   @db.VarChar(255) @unique
-  password        String   @db.VarChar(255)
-  video1          Boolean  @default(false)
-  video2          Boolean  @default(false)
-  score           Float?
-  gotAttestation  Boolean  @default(false)
-  date            DateTime @default(now())
-  dispositif      String?  @db.VarChar(255)
-  engagement      String?  @db.VarChar(255)
-  identification  String?  @db.VarChar(255)
-  formation       String?  @db.VarChar(255)
-  procedure       String?  @db.VarChar(255)
-  dispositifAlert String?  @db.VarChar(255)
-  certifierISO    String?  @db.VarChar(255)
-  mepSystem       String?  @db.VarChar(255)
-  intention       String?  @db.VarChar(255)
-  attestationDate DateTime? @map("attestation_date") // Track when attestation was granted
-
-  @@schema("uganda")
-  @@map("user")
 }

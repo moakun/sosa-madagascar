@@ -5,13 +5,11 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
 
-    // Validate required fields
     if (!data || !data.email) {
       return NextResponse.json({ message: 'Invalid input data or missing email' }, { status: 400 });
     }
 
-    // Update data in the database (using congoUser)
-    const updatedUser = await db.congoUser.update({
+    const updatedUser = await db.user.update({
       where: { email: data.email },
       data: {
         dispositif: data.dispositif || null,
@@ -42,8 +40,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ message: 'Email is required' }, { status: 400 });
     }
 
-    // Fetch data using congoUser
-    const userData = await db.congoUser.findUnique({
+    const userData = await db.user.findUnique({
       where: { email },
       select: {
         dispositif: true,

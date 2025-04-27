@@ -11,7 +11,7 @@ const features = [
   "Lignes directrices éthiques du groupe VINCI.",
   "Procédure d'évaluation des tiers.",
   "Régime disciplinaire et sanctions.",
-  "Politique et procédures anticorruption de SOGEA SATOM CONGO."
+  "Politique et procédures anticorruption de SGE-C CONGO."
 ]
 
 const Feature = () => {

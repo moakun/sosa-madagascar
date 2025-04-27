@@ -5,19 +5,19 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
 
-    // Validate required fields
-    if (!data || !data.email) {
+    if (!data || !data.email || data.score === undefined) {
       return NextResponse.json(
-        { message: 'Invalid input data or missing email' }, 
+        { message: 'Invalid input data or missing email/score' }, 
         { status: 400 }
       );
     }
 
-    // Update score in Congo database
-    const updatedUser = await db.congoUser.update({
+    const validatedScore = Math.max(0, data.score);
+
+    const updatedUser = await db.user.update({
       where: { email: data.email },
       data: {
-        score: data.score || null
+        score: validatedScore
       },
     });
 
@@ -46,8 +46,7 @@ export async function GET(req: Request) {
       );
     }
 
-    // Fetch score from Congo database
-    const userData = await db.congoUser.findUnique({
+    const userData = await db.user.findUnique({
       where: { email },
       select: {
         score: true,
@@ -61,8 +60,9 @@ export async function GET(req: Request) {
       );
     }
 
-    // Score evaluation logic
-    if (userData.score === null) {
+    const validatedScore = userData.score !== null ? Math.max(0, userData.score) : null;
+
+    if (validatedScore === null) {
       return NextResponse.json(
         { 
           success: false, 
@@ -70,18 +70,18 @@ export async function GET(req: Request) {
         },
         { status: 200 }
       );
-    } else if (userData.score < 7) {
+    } else if (validatedScore < 7) {
       return NextResponse.json(
         { 
           success: false, 
-          message: 'Score is not sufficient (must be greater than 8).' 
+          message: 'Score is not sufficient (must be greater than 7).' 
         },
         { status: 200 }
       );
     }
 
     return NextResponse.json(
-      { success: true, userData },
+      { success: true, userData: { score: validatedScore } },
       { status: 200 }
     );
   } catch (error) {

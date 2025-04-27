@@ -1,18 +1,18 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { useToast } from "@/hooks/use-toast"
 import { useSession } from "next-auth/react"
 import questions from './questions'
-import Image from "next/image";
-import sosa from "../public/assets/sosal.png";
+import Image from "next/image"
+import sosa from "../public/assets/sosal.png"
 import Results from './Results'
-import Lse from "../public/assets/lse.jpeg";
+import Lse from "../public/assets/lse.jpeg"
 
-const CongoQuiz: React.FC = () => {
+const Quiz: React.FC = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [score, setScore] = useState<number>(0)
   const [showScore, setShowScore] = useState(false)
@@ -20,72 +20,82 @@ const CongoQuiz: React.FC = () => {
   const { toast } = useToast()
   const { data: session } = useSession()
 
-  useEffect(() => {
-    if (session?.user?.email) {
-      fetchUserScore(session.user.email)
-    }
-  }, [session])
-
-  const fetchUserScore = async (email: string) => {
+  const fetchUserScore = useCallback(async (email: string) => {
     try {
-      const response = await fetch(`/api/score?email=${encodeURIComponent(email)}&schema=congo`);
+      const response = await fetch(`/api/score?email=${encodeURIComponent(email)}`)
       if (!response.ok) {
-        throw new Error('Failed to fetch user score');
+        throw new Error('Failed to fetch user score')
       }
-  
-      const data = await response.json();
-  
+
+      const data = await response.json()
+
       if (data.success) {
         if (data.userData?.score !== null) {
-          const score = data.userData.score;
+          const score = Math.min(data.userData.score, questions.length)
           if (score >= 7) {
-            setScore(score);
-            setShowScore(true);
+            setScore(score)
+            setShowScore(true)
           } else {
-            setScore(score);
-            setShowScore(false);
+            setScore(score)
+            setShowScore(false)
             toast({
               title: "Score insuffisant",
-              description: `Votre score est ${score}, vous devez repasser l'examen.`,
+              description: `Votre score est ${score}, vous devez repasser l&apos;examen.`,
               variant: "default",
-            });
+            })
           }
         } else {
-          setScore(0);
-          setShowScore(false);
+          setScore(0)
+          setShowScore(false)
           toast({
             title: "Premier examen",
             description: "Bonne chance pour votre examen !",
             variant: "default",
-          });
+          })
         }
       } else {
-        console.log(data.message || "Erreur inconnue");
+        console.log(data.message || "Erreur inconnue")
         toast({
           title: "Message",
           description: data.message || "Impossible de récupérer le score",
           variant: "default",
-        });
+        })
       }
     } catch (error) {
-      console.error('Erreur:', error);
+      console.error('Erreur:', error)
       toast({
         title: "Erreur",
         description: "Impossible de récupérer le score",
         variant: "destructive",
-      });
+      })
     }
-  };
+  }, [toast])
+
+  useEffect(() => {
+    if (session?.user?.email) {
+      fetchUserScore(session.user.email)
+    }
+  }, [session, fetchUserScore])
 
   const handleAnswerOptionClick = (answerIndex: number) => {
     const newUserAnswers = [...userAnswers]
+    const previousAnswer = newUserAnswers[currentQuestion]
+    
     newUserAnswers[currentQuestion] = answerIndex
     setUserAnswers(newUserAnswers)
 
     const isCorrect = questions[currentQuestion].answerOptions[answerIndex].isCorrect
-    if (isCorrect) {
-      setScore((prevScore) => prevScore + 1)
-    }
+    const wasCorrect = previousAnswer !== null && 
+                      questions[currentQuestion].answerOptions[previousAnswer].isCorrect
+
+    setScore(prevScore => {
+      if (isCorrect && !wasCorrect) {
+        return prevScore + 1
+      } else if (!isCorrect && wasCorrect) {
+        return prevScore - 1
+      }
+      return prevScore
+    })
   }
 
   const handlePrevious = () => {
@@ -107,6 +117,8 @@ const CongoQuiz: React.FC = () => {
     if (!session?.user?.email) return
 
     try {
+      const finalScore = Math.min(score, questions.length)
+      
       const response = await fetch('/api/score', {
         method: 'POST',
         headers: {
@@ -114,8 +126,7 @@ const CongoQuiz: React.FC = () => {
         },
         body: JSON.stringify({
           email: session.user.email,
-          score,
-          schema: 'congo' // Congo-specific change
+          score: finalScore
         }),
       })
 
@@ -133,7 +144,7 @@ const CongoQuiz: React.FC = () => {
       console.error('Erreur:', error)
       toast({
         title: "Erreur",
-        description: "Impossible d'enregistrer votre score",
+        description: "Impossible d&apos;enregistrer votre score",
         variant: "destructive",
       })
     }
@@ -148,7 +159,6 @@ const CongoQuiz: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white-500 p-4">
-      {/* Logo Section - Kept exactly the same */}
       <div className="flex justify-center gap-8 mb-8 w-full max-w-7xl">
         <Image src={Lse} alt="Logo" width={80} height={60} />
         <Image src={sosa} alt="Logo" width={150} height={60} />
@@ -157,12 +167,12 @@ const CongoQuiz: React.FC = () => {
       <Card className="w-full max-w-7xl bg-white shadow-lg">
         <CardHeader>
           <CardTitle className="text-center">
-            Quiz sur l'éthique et la lutte contre la corruption (Congo)
+            Quiz sur l&apos;éthique et la lutte contre la corruption
           </CardTitle>
         </CardHeader>
         <CardContent>
           {showScore ? (
-            <Results score={score} totalQuestions={questions.length} onRestart={restartQuiz} />
+            <Results score={Math.min(score, questions.length)} totalQuestions={questions.length} onRestart={restartQuiz} />
           ) : (
             <>
               <Progress value={(currentQuestion + 1) / questions.length * 100} className="mb-4 bg-gray-200" />
@@ -181,7 +191,7 @@ const CongoQuiz: React.FC = () => {
                     className={`w-full justify-start h-auto py-3 px-4 text-left 
                       whitespace-normal min-h-[80px] break-words ${
                         userAnswers[currentQuestion] === index
-                          ? 'bg-blue-500 text-white hover:bg-blue-600'
+                          ? 'bg-blue-500 text-white-500 hover:bg-blue-600'
                           : 'bg-white text-black hover:bg-blue-100'
                       }`}
                   >
@@ -205,6 +215,7 @@ const CongoQuiz: React.FC = () => {
             <Button 
               onClick={handleNext}
               className="bg-blue-500 text-white-500 hover:bg-blue-600"
+              disabled={userAnswers[currentQuestion] === null}
             >
               {currentQuestion === questions.length - 1 ? 'Terminé' : 'Suivant'}
             </Button>
@@ -215,4 +226,4 @@ const CongoQuiz: React.FC = () => {
   )
 }
 
-export default CongoQuiz
+export default Quiz

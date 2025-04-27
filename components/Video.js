@@ -3,89 +3,119 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { toast } from "@/hooks/use-toast";
 
 export default function Video() {
   const videos = [
     {
       id: 1,
       title: "Première Partie",
-      url: "https://d21ulo4r1z07kx.cloudfront.net/FinalCongoOne.mp4", // Updated to Congo videos
+      url: "https://d21ulo4r1z07kx.cloudfront.net/CongoPartOne.mp4",
     },
     {
       id: 2,
       title: "Deuxième Partie",
-      url: "https://d21ulo4r1z07kx.cloudfront.net/FinalCongoTwo.mp4", // Updated to Congo videos
+      url: "https://d21ulo4r1z07kx.cloudfront.net/CongoPartTwo.mp4",
     },
   ];
 
   const { data: session, status } = useSession();
   const [currentVideo, setCurrentVideo] = useState(null);
-  const [videoStates, setVideoStates] = useState({ video1: false, video2: false });
+  const [videoStates, setVideoStates] = useState({ 
+    video1: { watched: false, loading: false },
+    video2: { watched: false, loading: false }
+  });
   const router = useRouter();
 
+  // Fetch initial video states
   useEffect(() => {
-    if (status === "loading") return;
-    if (!session || !session.user?.email) {
-      router.push("/login"); // Updated to Congo login
-    } else {
-      const fetchVideoStatus = async () => {
-        try {
-          const response = await fetch(`/api/video?email=${session.user.email}&schema=congo`); // Added Congo schema
-          
-          if (!response.ok) {
-            throw new Error("Échec de la récupération du statut de la vidéo");
-          }
-
-          const data = await response.json();
-
-          if (data.success) {
-            setVideoStates({
-              video1: data.videoStatus.video1Status === "Vu",
-              video2: data.videoStatus.video2Status === "Vu",
-            });
-          }
-        } catch (error) {
-          console.error("Erreur:", error);
+    if (status === "loading" || !session?.user?.email) return;
+    
+    const fetchVideoStatus = async () => {
+      try {
+        const response = await fetch(
+          `/api/video?email=${encodeURIComponent(session.user.email)}`
+        );
+        
+        if (!response.ok) throw new Error("Failed to fetch video status");
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          setVideoStates({
+            video1: { watched: data.videoStatus.video1Status === "Regardé", loading: false },
+            video2: { watched: data.videoStatus.video2Status === "Regardé", loading: false }
+          });
         }
-      };
+      } catch (error) {
+        console.error("Error fetching video status:", error);
+        toast({
+          title: "Error",
+          description: "Could not load video status",
+          variant: "destructive",
+        });
+      }
+    };
 
-      fetchVideoStatus();
-    }
-  }, [session, status, router]);
+    fetchVideoStatus();
+  }, [session, status]);
 
   const handleWatchNow = async (videoId) => {
     if (!session?.user?.email) return;
-
+    
+    const videoKey = `video${videoId}`;
+    
+    // Start playing the video immediately
+    setCurrentVideo(videoId);
+    
+    // If already watched, we don't need to update the status again
+    if (videoStates[videoKey].watched) return;
+    
+    // Prevent multiple clicks while processing
+    if (videoStates[videoKey].loading) return;
+    
     try {
-      const videoKey = videoId === 1 ? "video1" : "video2";
-      setVideoStates((prev) => ({ ...prev, [videoKey]: true }));
-      setCurrentVideo(videoId);
-
+      // Set loading state
+      setVideoStates(prev => ({
+        ...prev,
+        [videoKey]: { ...prev[videoKey], loading: true }
+      }));
+      
+      // Mark as watched in database
       const response = await fetch("/api/video", {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: session.user.email,
-          [videoKey]: true,
-          schema: 'congo' // Added Congo schema
+          [videoKey]: true
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Échec de la mise à jour");
-      }
+      if (!response.ok) throw new Error("Failed to update video status");
+      
+      // Update local state only after successful API call
+      setVideoStates(prev => ({
+        ...prev,
+        [videoKey]: { watched: true, loading: false }
+      }));
+      
     } catch (error) {
-      console.error("Erreur:", error);
+      console.error("Error updating video status:", error);
+      toast({
+        title: "Error",
+        description: "Could not mark video as watched",
+        variant: "destructive",
+      });
+      
+      // Reset loading state on error
+      setVideoStates(prev => ({
+        ...prev,
+        [videoKey]: { ...prev[videoKey], loading: false }
+      }));
     }
   };
 
-  const allVideosWatched = videoStates.video1 && videoStates.video2;
-
-  const handleBackToDashboard = () => {
-    router.push("/dashboard"); // Updated to Congo dashboard
-  };
+  const allVideosWatched = videoStates.video1.watched && videoStates.video2.watched;
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-6">
@@ -94,26 +124,32 @@ export default function Video() {
         <p className="text-black-500 mb-8">Choisissez une vidéo à regarder.</p>
 
         <div className="space-y-6">
-          {videos.map((video) => (
-            <div
-              key={video.id}
-              className="p-6 rounded-lg shadow-lg bg-white-500 text-black-600 flex items-center justify-between"
-            >
-              <div className="ml-4">
-                <h2 className="text-lg font-semibold">{video.title}</h2>
-                <p>
-                  {video.id === 1 && videoStates.video1 ? "Vu" : null}
-                  {video.id === 2 && videoStates.video2 ? "Vu" : null}
-                </p>
-              </div>
-              <button
-                onClick={() => handleWatchNow(video.id)}
-                className="px-4 py-2 bg-blue-500 text-white-500 rounded-lg shadow hover:bg-blue-100 hover:text-blue-500 transition-all"
+          {videos.map((video) => {
+            const videoKey = `video${video.id}`;
+            const { watched, loading } = videoStates[videoKey];
+            
+            return (
+              <div
+                key={video.id}
+                className="p-6 rounded-lg shadow-lg bg-white-500 text-black-600 flex items-center justify-between"
               >
-                Regarder maintenant
-              </button>
-            </div>
-          ))}
+                <div className="ml-4">
+                  <h2 className="text-lg font-semibold">{video.title}</h2>
+                  {watched && <p className="text-green-500 font-medium">Déjà vu</p>}
+                </div>
+                <button
+                  onClick={() => handleWatchNow(video.id)}
+                  className={`px-4 py-2 rounded-lg shadow transition-all ${
+                    loading
+                      ? "bg-blue-300 text-black cursor-wait"
+                      : "bg-blue-500 text-white-500 hover:bg-blue-600"
+                  }`}
+                >
+                  {loading ? "Enregistrement..." : "Regarder"}
+                </button>
+              </div>
+            );
+          })}
         </div>
 
         {currentVideo && (
@@ -122,6 +158,7 @@ export default function Video() {
             <div className="flex justify-center">
               <video
                 controls
+                autoPlay
                 className="w-full max-w-3xl rounded-lg shadow-md"
                 src={videos.find((v) => v.id === currentVideo)?.url}
               />
@@ -132,8 +169,8 @@ export default function Video() {
         {allVideosWatched && (
           <div className="mt-8 text-center">
             <button
-              onClick={handleBackToDashboard}
-              className="px-6 py-3 bg-blue-500 text-white-500 font-semibold rounded-lg shadow-lg hover:bg-green-600 transition-all"
+              onClick={() => router.push("/dashboard")}
+              className="px-6 py-3 bg-blue-500 text-white-500 font-semibold rounded-lg shadow-lg hover:bg-blue-600 transition-all"
             >
               Retour au tableau de bord
             </button>

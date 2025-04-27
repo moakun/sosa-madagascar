@@ -36,22 +36,21 @@ export default function Attestation() {
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, scaledHeight);
       pdf.save("certificat.pdf");
 
-      // Update attestation status in Congo database
+      // Update attestation status
       const response = await fetch("/api/certinfo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          email: session.user.email,
-          schema: "congo" // Explicitly specify Congo schema
+          email: session.user.email
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Échec de la mise à jour dans la base de données Congo");
+        throw new Error("Échec de la mise à jour dans la base de données");
       }
 
     } catch (error) {
-      console.error("Erreur Congo:", error);
+      console.error("Erreur:", error);
     } finally {
       setIsGenerating(false);
     }
@@ -83,10 +82,10 @@ export default function Attestation() {
           <div className="overflow-auto">
             <div ref={certificateRef}>
               <Certificate
-                userName={session.user?.fullName || "Participant Congo"}
-                company={session.user?.companyName || "Entreprise Congo"}
+                userName={session.user?.fullName || "Participant"}
+                company={session.user?.companyName || "Entreprise"}
                 date={new Date()}
-                courseName="Formation Anti-corruption Congo"
+                courseName="Formation Anti-corruption"
               />
             </div>
           </div>

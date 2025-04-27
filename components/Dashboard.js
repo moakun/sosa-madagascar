@@ -10,7 +10,7 @@ export default function Dashboard() {
   const [progress, setProgress] = useState({
     videosCompleted: 0,
     quizPassed: false,
-    questionnaireCompleted: 0,
+    questionnaireCompleted: false, // Changed from number to boolean
     attestationDownloaded: false,
   });
 
@@ -21,18 +21,18 @@ export default function Dashboard() {
     if (status === 'loading') return;
 
     if (!session || !session.user?.email) {
-      console.error('L\'utilisateur n\'est pas connecté');
+      console.error('L&apos;utilisateur n&apos;est pas connecté');
       return;
     }
 
     const fetchAttestationStatus = async () => {
       try {
-        const response = await fetch(`/api/certinfo?email=${session.user.email}&schema=congo`, { // Added schema=congo
+        const response = await fetch(`/api/certinfo?email=${session.user.email}`, {
           method: 'GET',
         });
     
         if (!response.ok) {
-          throw new Error('échec du fetch du statut de l\'attestation :');
+          throw new Error('échec du fetch du statut de l&apos;attestation');
         }
     
         const data = await response.json();
@@ -41,13 +41,13 @@ export default function Dashboard() {
           setGotAttestation(data.gotAttestation);
         }
       } catch (error) {
-        console.error('échec du fetch du statut de l\'attestation:', error);
+        console.error('échec du fetch du statut de l&apos;attestation:', error);
       }
     };
   
     const fetchVideoData = async () => {
       try {
-        const response = await fetch(`/api/video?email=${session.user.email}&schema=congo`); // Added schema=congo
+        const response = await fetch(`/api/video?email=${session.user.email}`);
         if (!response.ok) {
           throw new Error(`Échec du fetch des données vidéo. Statut: ${response.status}`);
         }
@@ -65,13 +65,13 @@ export default function Dashboard() {
           }));
         }
       } catch (error) {
-        console.error('Erreur lors de la récupération du statut vidéo:', error.message);
+        console.error('Erreur lors de la récupération du statut vidéo:', error);
       }
     };
     
     const fetchQuestionnaireData = async () => {
       try {
-        const response = await fetch(`/api/questionnaire?email=${session.user.email}&schema=congo`); // Added schema=congo
+        const response = await fetch(`/api/questionnaire?email=${session.user.email}`);
         if (!response.ok) {
           throw new Error('échec du fetch des données du questionnaire');
         }
@@ -85,7 +85,7 @@ export default function Dashboard() {
     
           setProgress((prev) => ({
             ...prev,
-            questionnaireCompleted: questionnaireCompleted ? 1 : 0,
+            questionnaireCompleted, // Directly set the boolean value
           }));
         }
       } catch (error) {
@@ -95,7 +95,7 @@ export default function Dashboard() {
 
     const fetchQuizData = async () => {
       try {
-        const response = await fetch(`/api/score?email=${session.user.email}&schema=congo`); // Added schema=congo
+        const response = await fetch(`/api/score?email=${session.user.email}`);
         if (!response.ok) {
           throw new Error('Échec du fetch des données du quiz');
         }
@@ -122,17 +122,12 @@ export default function Dashboard() {
     fetchAttestationStatus();
   }, [session, status]);
 
-  /* 
-   * ALL UI CODE BELOW REMAINS EXACTLY THE SAME AS YOUR ORIGINAL
-   * Only changed the API endpoints above by adding ?schema=congo
-   */
-   
   const calculateOverallProgress = () => {
     const totalSteps = 4;
     const completedSteps = [
       progress.videosCompleted === 2,
       progress.quizPassed,
-      progress.questionnaireCompleted === 1,
+      progress.questionnaireCompleted, // Now using the boolean directly
       gotAttestation,
     ].filter(Boolean).length;
 
@@ -179,9 +174,9 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white-300 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-white-500 mb-2">
-          Progrès de la formation &quot;{session?.user?.fullName.toUpperCase()}&quot;
+          Progrès de la formation &quot;{session?.user?.fullName?.toUpperCase() || "UTILISATEUR"}&quot;
         </h1>
-        <p className="text-black-500 mb-4">Suivez votre parcours d'apprentissage !</p>
+        <p className="text-black-500 mb-4">Suivez votre parcours d&apos;apprentissage !</p>
 
         <ProgressBar progress={overallProgress} />
 
@@ -251,7 +246,7 @@ export default function Dashboard() {
         {isDownloadButtonVisible && (
           <Link href='/attestation'>
             <Button className="w-full mt-8 text-white-500 bg-blue-500 hover:bg-blue-700">
-              Télécharger l'attestation
+              Télécharger l&apos;attestation
             </Button>
           </Link>
         )}

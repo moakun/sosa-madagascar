@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["types/**/*.d.ts","next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Register.js", "app/login/page.js", "app/dashboard/page.js", "app/quiz/page.js", "app/register/page.js", "app/video/page.js", "components/Dashboard.js"],
+  "include": ["types/**/*.d.ts","next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Register.tsx", "app/login/page.js", "app/dashboard/page.js", "app/quiz/page.js", "app/register/page.js", "app/video/page.js", "components/Dashboard.js"],
   "exclude": ["node_modules"]
 }

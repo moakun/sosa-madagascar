@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
-export default function CongoPostQuiz() {
+export default function PostQuiz() {
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -41,8 +41,7 @@ export default function CongoPostQuiz() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: session?.user?.email,
-          ...formData,
-          schema: 'congo' // Only Congo-specific change
+          ...formData
         }),
       });
   
@@ -58,7 +57,7 @@ export default function CongoPostQuiz() {
           mepSystem: '',
           intention: '',
         });
-        router.push('/dashboard'); // Updated to Congo dashboard
+        router.push('/dashboard');
       } else {
         alert('Échec de la mise à jour des données.');
       }
@@ -87,7 +86,7 @@ export default function CongoPostQuiz() {
       <Card className="w-full max-w-md bg-white-500 rounded-lg shadow-lg border-none">
         <CardHeader className="space-y-2 p-4">
           <CardTitle className="text-2xl font-bold text-center text-blue-500">
-            Questionnaire Congo
+            Questionnaire Anti-Corruption
           </CardTitle>
           <CardDescription className="text-center text-gray-500 text-sm">
             Répondez par Oui, Non ou une date.

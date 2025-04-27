@@ -8,12 +8,12 @@ interface ResultsProps {
   onRestart: () => void
 }
 
-const CongoResults: React.FC<ResultsProps> = ({ score, totalQuestions, onRestart }) => {
+const Results: React.FC<ResultsProps> = ({ score, totalQuestions, onRestart }) => {
   const percentage = (score / totalQuestions) * 100
 
   return (
     <div className="text-center">
-      <h2 className="text-3xl font-bold mb-4">Quiz terminé - Congo</h2>
+      <h2 className="text-3xl font-bold mb-4">Quiz terminé!</h2>
       <p className="text-2xl mb-4">
         Votre score est : {score} / {totalQuestions}
       </p>
@@ -27,7 +27,7 @@ const CongoResults: React.FC<ResultsProps> = ({ score, totalQuestions, onRestart
           Redémarrer le quiz
         </button>
 
-        {/* Lien vers le tableau de bord Congo */}
+        {/* Lien vers le tableau de bord*/}
         <Link 
           href="/dashboard" 
           className="px-4 py-2 bg-blue-500 text-white-500 rounded hover:bg-blue-600 transition-colors"
@@ -35,7 +35,7 @@ const CongoResults: React.FC<ResultsProps> = ({ score, totalQuestions, onRestart
           Retour au tableau de bord
         </Link>
 
-        {/* Lien vers le questionnaire Congo */}
+        {/* Lien vers le questionnaire */}
         <Link 
           href="/questionnaire" 
           className="px-4 py-2 bg-blue-500 text-white-500 rounded hover:bg-blue-600 transition-colors"
@@ -47,4 +47,4 @@ const CongoResults: React.FC<ResultsProps> = ({ score, totalQuestions, onRestart
   )
 }
 
-export default CongoResults
+export default Results

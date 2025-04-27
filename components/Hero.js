@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useMemo } from "react";
 import Image from "next/image";
@@ -44,11 +44,17 @@ const Hero = ({
               Formation <strong>Anti-Corruption</strong> et <strong>Éthique des Affaires</strong>
               </h1>
               <p className="text-black-500 mt-4 mb-6">
-              Sogea Satom Congo
+              SGE-C CONGO
               </p>
-              <Link href="/dashboard">
+              <Link href="/login">
               <ButtonPrimary>Commencer!</ButtonPrimary>
               </Link>
+              <p className="text-sm text-black mt-4">
+                En cas de problème, veuillez envoyer un email à: <a href="mailto:developedbymoe@gmail.com" className="text-blue-500 underline">developedbymoe@gmail.com</a>
+              </p>
+              <p className="text-sm text-black mt-4">
+              Après avoir reçu votre certificat, veuillez l&apos;envoyer à l&apos;adresse e-mail suivante: <a href="mailto:developedbymoe@gmail.com" className="text-blue-500 underline">developedbymoe@gmail.com</a>
+              </p>
             </div>
             <div className="flex w-full">
               <motion.div className="h-full w-full" variants={scrollAnimation}>

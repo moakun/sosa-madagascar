@@ -22,8 +22,8 @@ export const AuthOptions: NextAuthOptions = {
           return null;
         }
 
-        // Query the Congo-specific user table
-        const existingUser = await db.congoUser.findUnique({
+        // Query the unified User table
+        const existingUser = await db.user.findUnique({
           where: { email: credentials.email },
         });
 
@@ -56,7 +56,7 @@ export const AuthOptions: NextAuthOptions = {
           email: user.email,
           fullName: user.fullName,
           companyName: user.companyName,
-          schema: 'congo' // Add Congo schema to token
+          // Removed schema since we're using unified User model
         };
       }
       return token;
@@ -69,7 +69,7 @@ export const AuthOptions: NextAuthOptions = {
           email: token.email,
           fullName: token.fullName,
           companyName: token.companyName,
-          schema: token.schema // Include schema in session
+          // Removed schema from session
         },
       };
     },

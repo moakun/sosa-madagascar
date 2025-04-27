@@ -24,9 +24,9 @@ const questions = [
   },
   {
     question:
-      "Selon l'indice de perception de la corruption de TRANSPARENCYINTERNATIONAL le Sénégal est:",
+      "Selon l'indice de perception de la corruption de TRANSPARENCYINTERNATIONAL le Congo est:",
     answerOptions: [
-      { answer: "69 ème sur 180 pays à l'échelle mondial.", isCorrect: true },
+      { answer: "158 ème sur 180 pays à l'échelle mondial.", isCorrect: true },
       { answer: '1 er en Afrique.' },
       {
         answer:
@@ -37,7 +37,7 @@ const questions = [
   },
   {
     question:
-      'le code pénal sénégalais distingue entre la corruption passive et la corruption active:',
+      'le code pénal Congolais distingue entre la corruption passive et la corruption active:',
     answerOptions: [{ answer: 'VRAI', isCorrect: true }, { answer: 'FAUX' }],
   },
   {
@@ -61,12 +61,12 @@ const questions = [
     ],
   },
   {
-    question: 'SOGEA SATOM Sénégal et LSE ont interdit les cadeaux en espèce:',
+    question: 'SGE-C Congo a interdit les cadeaux en espèce:',
     answerOptions: [{ answer: 'VRAI', isCorrect: true }, { answer: 'FAUX' }],
   },
   {
     question:
-      "SOGEA SATOM Sénégal et LSE ont mis à la disposition de leur personnel et de leurs partenaires commerciaux un dispositif d'alertes pour signaler toutes les inquiétudes en relation avec la corruption:",
+      "SGE-C Congo a mis à la disposition de leur personnel et de leurs partenaires commerciaux un dispositif d'alertes pour signaler toutes les inquiétudes en relation avec la corruption:",
     answerOptions: [{ answer: 'VRAI', isCorrect: true }, { answer: 'FAUX' }],
   },
   {

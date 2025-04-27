@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import * as z from 'zod';
 
-// Validation schema for POST requests
 const postSchema = z.object({
   email: z.string().email("Email invalide")
 });
@@ -19,7 +18,7 @@ export async function GET(req: Request) {
   }
 
   try {
-    const user = await db.congoUser.findUnique({
+    const user = await db.user.findUnique({
       where: { email },
       select: { 
         gotAttestation: true,
@@ -30,7 +29,7 @@ export async function GET(req: Request) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Utilisateur Congo non trouvé' },
+        { error: 'Utilisateur non trouvé' },
         { status: 404 }
       );
     }
@@ -43,7 +42,7 @@ export async function GET(req: Request) {
       }
     });
   } catch (error) {
-    console.error('[CONGO_ATTESTATION_GET] Error:', error);
+    console.error('[ATTESTATION_GET] Error:', error);
     return NextResponse.json(
       { error: 'Erreur du serveur' },
       { status: 500 }
@@ -56,39 +55,36 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { email } = postSchema.parse(body);
 
-    // Verify user exists before update
-    const existingUser = await db.congoUser.findUnique({
+    const existingUser = await db.user.findUnique({
       where: { email },
       select: { id: true }
     });
 
     if (!existingUser) {
       return NextResponse.json(
-        { error: 'Utilisateur Congo non trouvé' },
+        { error: 'Utilisateur non trouvé' },
         { status: 404 }
       );
     }
 
-    // Update attestation status
-    const updatedUser = await db.congoUser.update({
+    const updatedUser = await db.user.update({
       where: { email },
       data: { 
         gotAttestation: true,
-        attestationDate: new Date() // Add timestamp of when attestation was granted
       },
       select: {
         gotAttestation: true,
-        attestationDate: true
+        date: true
       }
     });
 
     return NextResponse.json({
       success: true,
       gotAttestation: updatedUser.gotAttestation,
-      attestationDate: updatedUser.attestationDate
+      attestationDate: updatedUser.date
     });
   } catch (error) {
-    console.error('[CONGO_ATTESTATION_POST] Error:', error);
+    console.error('[ATTESTATION_POST] Error:', error);
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(

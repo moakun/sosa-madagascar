@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
-// Handle GET request to fetch video status by email
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -14,8 +13,7 @@ export async function GET(request) {
       );
     }
 
-    // Query the Congo database
-    const user = await db.congoUser.findUnique({
+    const user = await db.user.findUnique({
       where: { email },
       select: {
         video1: true,
@@ -48,7 +46,6 @@ export async function GET(request) {
   }
 }
 
-// Handle PATCH request to update video status by email
 export async function PATCH(request) {
   try {
     const { email, video1, video2 } = await request.json();
@@ -60,8 +57,7 @@ export async function PATCH(request) {
       );
     }
 
-    // Update in Congo database
-    await db.congoUser.update({
+    await db.user.update({
       where: { email },
       data: {
         video1: video1 !== undefined ? video1 : undefined,
