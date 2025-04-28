@@ -8,9 +8,9 @@ import { useToast } from "@/hooks/use-toast"
 import { useSession } from "next-auth/react"
 import questions from './questions'
 import Image from "next/image"
-import sosa from "../public/assets/sosal.png"
+import sosa from "../public/assets/sgec.jpeg"
 import Results from './Results'
-import Lse from "../public/assets/lse.jpeg"
+
 
 const Quiz: React.FC = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0)
@@ -160,7 +160,6 @@ const Quiz: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white-500 p-4">
       <div className="flex justify-center gap-8 mb-8 w-full max-w-7xl">
-        <Image src={Lse} alt="Logo" width={80} height={60} />
         <Image src={sosa} alt="Logo" width={150} height={60} />
       </div>
 
