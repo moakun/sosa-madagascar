@@ -27,7 +27,6 @@ export default function Video() {
   });
   const router = useRouter();
 
-  // Fetch initial video states
   useEffect(() => {
     if (status === "loading" || !session?.user?.email) return;
     
@@ -50,8 +49,8 @@ export default function Video() {
       } catch (error) {
         console.error("Error fetching video status:", error);
         toast({
-          title: "Error",
-          description: "Could not load video status",
+          title: "Erreur",
+          description: "Impossible de charger l'état de la vidéo",
           variant: "destructive",
         });
       }
@@ -60,28 +59,20 @@ export default function Video() {
     fetchVideoStatus();
   }, [session, status]);
 
-  const handleWatchNow = async (videoId) => {
-    if (!session?.user?.email) return;
-    
-    const videoKey = `video${videoId}`;
-    
-    // Start playing the video immediately
+  const handleWatchNow = (videoId) => {
+    // Just play the selected video — don’t update DB yet
     setCurrentVideo(videoId);
-    
-    // If already watched, we don't need to update the status again
+  };
+
+  const handleVideoEnded = async (videoId) => {
+    if (!session?.user?.email) return;
+
+    const videoKey = `video${videoId}`;
+
+    // If already watched, do nothing
     if (videoStates[videoKey].watched) return;
-    
-    // Prevent multiple clicks while processing
-    if (videoStates[videoKey].loading) return;
-    
+
     try {
-      // Set loading state
-      setVideoStates(prev => ({
-        ...prev,
-        [videoKey]: { ...prev[videoKey], loading: true }
-      }));
-      
-      // Mark as watched in database
       const response = await fetch("/api/video", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -92,26 +83,19 @@ export default function Video() {
       });
 
       if (!response.ok) throw new Error("Failed to update video status");
-      
-      // Update local state only after successful API call
+
+      // Update local state
       setVideoStates(prev => ({
         ...prev,
         [videoKey]: { watched: true, loading: false }
       }));
-      
     } catch (error) {
       console.error("Error updating video status:", error);
       toast({
-        title: "Error",
-        description: "Could not mark video as watched",
+        title: "Erreur",
+        description: "Impossible de marquer la vidéo comme regardée",
         variant: "destructive",
       });
-      
-      // Reset loading state on error
-      setVideoStates(prev => ({
-        ...prev,
-        [videoKey]: { ...prev[videoKey], loading: false }
-      }));
     }
   };
 
@@ -145,7 +129,7 @@ export default function Video() {
                       : "bg-blue-500 text-white-500 hover:bg-blue-600"
                   }`}
                 >
-                  {loading ? "Enregistrement..." : "Regarder"}
+                  {loading ? "Chargement..." : "Regarder"}
                 </button>
               </div>
             );
@@ -161,6 +145,7 @@ export default function Video() {
                 autoPlay
                 className="w-full max-w-3xl rounded-lg shadow-md"
                 src={videos.find((v) => v.id === currentVideo)?.url}
+                onEnded={() => handleVideoEnded(currentVideo)}
               />
             </div>
           </div>
