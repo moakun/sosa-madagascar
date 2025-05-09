@@ -60,7 +60,17 @@ export default function Video() {
   }, [session, status]);
 
   const handleWatchNow = (videoId) => {
-    // Just play the selected video — don’t update DB yet
+    // Check if this is video 2 and video 1 hasn't been watched yet
+    if (videoId === 2 && !videoStates.video1.watched) {
+      toast({
+        title: "Vidéo verrouillée",
+        description: "Vous devez d'abord regarder la première vidéo",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Play the selected video if allowed
     setCurrentVideo(videoId);
   };
 
@@ -111,25 +121,32 @@ export default function Video() {
           {videos.map((video) => {
             const videoKey = `video${video.id}`;
             const { watched, loading } = videoStates[videoKey];
+            const isLocked = video.id === 2 && !videoStates.video1.watched;
             
             return (
               <div
                 key={video.id}
-                className="p-6 rounded-lg shadow-lg bg-white-500 text-black-600 flex items-center justify-between"
+                className={`p-6 rounded-lg shadow-lg bg-white-500 text-black-600 flex items-center justify-between ${
+                  isLocked ? "opacity-75" : ""
+                }`}
               >
                 <div className="ml-4">
                   <h2 className="text-lg font-semibold">{video.title}</h2>
                   {watched && <p className="text-green-500 font-medium">Déjà vu</p>}
+                  {isLocked && <p className="text-red-500 font-medium">Verrouillé - Regardez d'abord la première vidéo</p>}
                 </div>
                 <button
                   onClick={() => handleWatchNow(video.id)}
                   className={`px-4 py-2 rounded-lg shadow transition-all ${
                     loading
                       ? "bg-blue-300 text-black cursor-wait"
+                      : isLocked
+                      ? "bg-gray-400 text-white-500 cursor-not-allowed"
                       : "bg-blue-500 text-white-500 hover:bg-blue-600"
                   }`}
+                  disabled={isLocked || loading}
                 >
-                  {loading ? "Chargement..." : "Regarder"}
+                  {loading ? "Chargement..." : isLocked ? "Verrouillé" : "Regarder"}
                 </button>
               </div>
             );
