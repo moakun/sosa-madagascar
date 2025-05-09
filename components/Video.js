@@ -133,7 +133,7 @@ export default function Video() {
                 <div className="ml-4">
                   <h2 className="text-lg font-semibold">{video.title}</h2>
                   {watched && <p className="text-green-500 font-medium">Déjà vu</p>}
-                  {isLocked && <p className="text-red-500 font-medium">Verrouillé - Regardez d'abord la première vidéo</p>}
+                  {isLocked && <p className="text-red-500 font-medium">Verrouillé - Regardez d&apos;abord la première vidéo</p>}
                 </div>
                 <button
                   onClick={() => handleWatchNow(video.id)}
