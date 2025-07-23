@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useSession } from "next-auth/react"
 import questions from './questions'
 import Image from "next/image"
-import sosa from "../public/assets/sgec.jpeg"
+import sosa from "../public/assets/sosal.png"
 import Results from './Results'
 
 

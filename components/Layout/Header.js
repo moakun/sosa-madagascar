@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Link as LinkScroll } from "react-scroll";
 import ButtonOutline from "../misc/ButtonOutline.";
 import Image from "next/image";
-import Logo from "../../public/assets/sgec.jpeg";
+import Logo from "../../public/assets/sosal.png";
 
 
 const Header = () => {
