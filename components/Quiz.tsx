@@ -1,16 +1,15 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { useToast } from "@/hooks/use-toast"
-import { useSession } from "next-auth/react"
-import questions from './questions'
-import Image from "next/image"
-import sosa from "../public/assets/sosal.png"
-import Results from './Results'
-
+import React, { useState, useEffect, useCallback } from 'react';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
+import { useSession } from "next-auth/react";
+import questions from './questions';
+import Image from "next/image";
+import sosa from '../public/assets/sosal.png';
+import Results from './Results';
 
 const Quiz: React.FC = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0)

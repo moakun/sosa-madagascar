@@ -24,7 +24,7 @@ const questions = [
   },
   {
     question:
-      "Selon l'indice de perception de la corruption de TRANSPARENCYINTERNATIONAL la Côte D'Ivoire est:",
+      "Selon l'indice de perception de la corruption de TRANSPARENCYINTERNATIONAL Madagascar est:",
     answerOptions: [
       { answer: "69 ème sur 180 pays à l'échelle mondial.", isCorrect: true },
       { answer: '1 er en Afrique.' },
@@ -37,7 +37,7 @@ const questions = [
   },
   {
     question:
-      "le code pénal de la Côte D'Ivoire distingue entre la corruption passive et la corruption active:",
+      "le code pénal de Madagascar distingue entre la corruption passive et la corruption active:",
     answerOptions: [{ answer: 'VRAI', isCorrect: true }, { answer: 'FAUX' }],
   },
   {
@@ -61,12 +61,12 @@ const questions = [
     ],
   },
   {
-    question: "La Côte D'Ivoire a interdit les cadeaux en espèce:",
+    question: "Madagascar a interdit les cadeaux en espèce:",
     answerOptions: [{ answer: 'VRAI', isCorrect: true }, { answer: 'FAUX' }],
   },
   {
     question:
-      "La Côte D'Ivoire a mis à la disposition de leur personnel et de leurs partenaires commerciaux un dispositif d'alertes pour signaler toutes les inquiétudes en relation avec la corruption:",
+      "Madagascar a mis à la disposition de leur personnel et de leurs partenaires commerciaux un dispositif d'alertes pour signaler toutes les inquiétudes en relation avec la corruption:",
     answerOptions: [{ answer: 'VRAI', isCorrect: true }, { answer: 'FAUX' }],
   },
   {

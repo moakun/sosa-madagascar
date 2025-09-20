@@ -29,7 +29,7 @@ export function Certificate({ userName, company, date, courseName }: Certificate
         {/* Certificate Content */}
         <div className="space-y-8 text-center">
           <p className="text-xl text-gray-800">
-            La société Sogea Satom Côte D&apos;Ivoire Certifie que
+            La société Sogea Satom Madagascar Certifie que
           </p>
           <p className="text-2xl font-semibold text-gray-900">
             {userName.toUpperCase()} de la société {company.toUpperCase()}
