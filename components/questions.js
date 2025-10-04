@@ -26,7 +26,7 @@ const questions = [
     question:
       "Selon l'indice de perception de la corruption de TRANSPARENCYINTERNATIONAL Madagascar est:",
     answerOptions: [
-      { answer: "69 ème sur 180 pays à l'échelle mondial.", isCorrect: true },
+      { answer: "140 ème sur 180 pays à l'échelle mondial.", isCorrect: true },
       { answer: '1 er en Afrique.' },
       {
         answer:
