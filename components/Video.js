@@ -10,12 +10,12 @@ export default function Video() {
     {
       id: 1,
       title: "Première Partie",
-      url: "https://d21ulo4r1z07kx.cloudfront.net/CDIPartOne.mp4",
+      url: "https://d21ulo4r1z07kx.cloudfront.net/MadagascarPartOne.mp4",
     },
     {
       id: 2,
       title: "Deuxième Partie",
-      url: "https://d21ulo4r1z07kx.cloudfront.net/CDIPartTwo.mp4",
+      url: "https://d21ulo4r1z07kx.cloudfront.net/MadagascarPartTwo.mp4",
     },
   ];
 
