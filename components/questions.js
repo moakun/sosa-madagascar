@@ -61,12 +61,12 @@ const questions = [
     ],
   },
   {
-    question: "Madagascar a interdit les cadeaux en espèce:",
+    question: "Sogea Satom Madagascar a interdit les cadeaux en espèce:",
     answerOptions: [{ answer: 'VRAI', isCorrect: true }, { answer: 'FAUX' }],
   },
   {
     question:
-      "Madagascar a mis à la disposition de leur personnel et de leurs partenaires commerciaux un dispositif d'alertes pour signaler toutes les inquiétudes en relation avec la corruption:",
+      "Sogea Satom Madagascar a mis à la disposition de leur personnel et de leurs partenaires commerciaux un dispositif d'alertes pour signaler toutes les inquiétudes en relation avec la corruption:",
     answerOptions: [{ answer: 'VRAI', isCorrect: true }, { answer: 'FAUX' }],
   },
   {
