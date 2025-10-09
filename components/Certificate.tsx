@@ -19,7 +19,7 @@ export function Certificate({ userName, company, date, courseName }: Certificate
         <div className="flex justify-center items-center">
           <div className="flex-1 flex justify-end">
             <img 
-              src="/assets/sosal.png" 
+              src="/assets/sosalogo.png" 
               alt="Logo de SOGEA SATOM" 
               className="h-24 w-auto object-contain"
             />
