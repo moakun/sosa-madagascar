@@ -66,7 +66,7 @@ const questions = [
   },
   {
     question:
-      "Sogea Satom Madagascar a mis à la disposition de leur personnel et de leurs partenaires commerciaux un dispositif d'alertes pour signaler toutes les inquiétudes en relation avec la corruption:",
+      "Sogea Satom Madagascar a mis à la disposition de son personnel et de ses partenaires commerciaux un dispositif d'alertes pour signaler toutes les inquiétudes en relation avec la corruption:",
     answerOptions: [{ answer: 'VRAI', isCorrect: true }, { answer: 'FAUX' }],
   },
   {
